@@ -1,17 +1,31 @@
 {% extends 'main/base.html' %}
 
 {%block title%}View List{%endblock%}
-
-
 {%block content%}
-    <h1> {{todo.name}}</h1>
-    <ul>
+    <h3> {{todo.name}}</h3>
+    <form method="post" action="#">
+        {%csrf_token%}
         {% for item in todo.item_set.all %}
-        {% if item.complete == True %}
-            <li> {{item.text}} - COMPLETE</li>
-        {% else %}
-            <li> {{item.text}} - INCOMPLETE</li>
-        {% endif %}
+        <div class="input-group mb-3"> 
+            <div class="input-group-prepend">
+                <div class="input-group-text">
+                    {% if item.complete == True %}
+                        <input type="checkbox", value="clicked", name="c{{item.id}}" checked>
+                    {% else %}
+                        <input type="checkbox" value="clicked", name="c{{item.id}}">
+                    {% endif %}
+                </div>      
+            </div>
+            <input type="text", value="{{item.text}}" class="form-control"> 
+        </div>
         {% endfor %}
-    </ul>
+        
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <button type="submit", name="newItem", value="newItem", class="btn btn-success">New Item</button>
+            </div>
+            <input type="text", name="new_text">
+        </div>
+        <button type="submit", name="save", value="save", class="btn btn-success">Save</button>
+    </form>
 {% endblock %}
