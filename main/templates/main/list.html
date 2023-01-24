@@ -6,7 +6,7 @@
     <form method="post" action="#">
         {%csrf_token%}
         {% for item in todo.item_set.all %}
-        <div class="input-group mb-3"> 
+        <div style="width: 70%;" class="input-group mb-3"> 
             <div class="input-group-prepend">
                 <div class="input-group-text">
                     {% if item.complete == True %}
@@ -20,12 +20,12 @@
         </div>
         {% endfor %}
         
-        <div class="input-group mb-3">
+        <div  class="input-group mb-3">
             <div class="input-group-prepend">
-                <button type="submit", name="newItem", value="newItem", class="btn btn-success">New Item</button>
+                <button type="submit", name="newItem", value="newItem", class="btn btn-dark">New Item</button>
             </div>
             <input type="text", name="new_text">
         </div>
-        <button type="submit", name="save", value="save", class="btn btn-success">Save</button>
+        <button type="submit", name="save", value="save", class="btn btn-dark">Save</button>
     </form>
 {% endblock %}
