@@ -1,7 +1,11 @@
-body {
-    background-color: #cccccc;
-    background-image: url(https://images.unsplash.com/photo-1674420628423-bf7a338af32d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80);
+body { 
+    background: url(https://images.unsplash.com/photo-1674420628423-bf7a338af32d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
+
 .sidenav {
     height: 100%;
     width:160px;
@@ -9,7 +13,7 @@ body {
     z-index: 1;
     top:0;
     left:0;
-    background-color: #111;
+    background-color: #000910;
     overflow-x: hidden;
     padding-top: 20ox;
 }
@@ -23,9 +27,10 @@ body {
 
 }
 .sidenav a:hover {
-    color: #f1f1f1;
+    color: #ffd48a;
 }
 .main {
     margin-left: 160px;
     padding: 0px 10px;
 }
+
