@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import ToDoList, Item
 from .forms import CreateNewList
 from django.http import HttpResponse, HttpResponseRedirect
+
 # Create your views here.
 
 def index(response, id):
@@ -43,3 +44,5 @@ def create(response):
     else:
         form = CreateNewList()
     return render(response, 'main/create.html', {"form": form})
+
+
