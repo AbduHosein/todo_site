@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 
-from register.models import User, Student
+from register.models import User, Student, Instructor, Admin
 
 
 class StudentSignUpForm(UserCreationForm):
@@ -44,13 +44,58 @@ class StudentSignUpForm(UserCreationForm):
             eagle_id = self.cleaned_data.get('eagle_id'),
             grade = self.cleaned_data.get('grade'))
         return user
-        
 
 
-
-class RegisterForm(UserCreationForm):
+class InstructorSignUpForm(UserCreationForm):
+    firstname = forms.CharField()
+    lastname = forms.CharField()
     email = forms.EmailField()
-
+    department = forms.CharField()
+    
     class Meta:
         model = User
-        fields = ["username", "email", "password1", "password2"]
+        fields = ('firstname', 'lastname', 'email', 'department')
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        email = self.cleaned_data.get('email')  
+        user.is_instructor = True
+        user.email = email
+        user.save()
+        Instructor.objects.create(
+            user=user,
+            firstname = self.cleaned_data.get('firstname'),
+            lastname = self.cleaned_data.get('lastname'),
+            email = email,
+            department = self.cleaned_data.get('department'))
+        return user        
+
+class AdminSignUpForm(UserCreationForm):
+    firstname = forms.CharField()
+    lastname = forms.CharField()
+    email = forms.EmailField()
+    department = forms.CharField()
+    
+    class Meta:
+        model = User
+        fields = ('firstname', 'lastname', 'email', 'department')
+
+    @transaction.atomic
+    def save(self):
+        user = super().save(commit=False)
+        email = self.cleaned_data.get('email') 
+        user.first_name = self.cleaned_data.get('firstname')
+        user.last_name = self.cleaned_data.get('lastname') 
+        user.is_admin = True
+        user.is_superuser = True
+        user.is_staff = True
+        user.email = email
+        user.save()
+        Admin.objects.create(
+            user=user,
+            firstname = self.cleaned_data.get('firstname'),
+            lastname = self.cleaned_data.get('lastname'),
+            email = email,
+            department = self.cleaned_data.get('department'))
+        return user
