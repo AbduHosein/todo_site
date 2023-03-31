@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 from .models import ToDoList, Item, Application, Course
 from .forms import CreateNewList, CreateApplicationForm, CreateCourseForm
 from django.http import HttpResponse, HttpResponseRedirect
@@ -34,6 +34,38 @@ def index(response, id):
 @login_required(login_url='/login')
 def home(response):
     return render(response, 'main/home.html', {})
+
+def apply(response, id):
+    course = Course.objects.get(id=id)
+    if response.method == "POST":
+        form = CreateApplicationForm(response.POST, response.FILES)
+        if form.is_valid():
+            t = Application(course_name=course.name, user= response.user )
+            resume = response.FILES['resume']
+            t.resume = resume
+            t.save()
+            course.applications.add(t)
+            course.save()
+        
+        return HttpResponseRedirect("/home")
+    else:
+        form = CreateApplicationForm()
+
+    return render(response, 'main/create_app.html', {"form": form})
+
+
+class summary(ListView):
+    model = Course
+    context_object_name = 'course_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        seperator = "-"
+        time = str(Course.start_time) + " - " + str(Course.end_time)
+        context['schedule'] = Course.days
+        return context
+    
 
 def fp(response):
     return render(response, 'main/fp.html', {})
@@ -79,6 +111,8 @@ class CreateCourse(CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.user = self.request.user
+        course_code = self.object.department + self.object.number + ': ' + self.object.name
+        self.object.course_code = course_code
         self.object.save()
 
         return redirect('/')

@@ -1,0 +1,88 @@
+{% extends 'main/base.html' %}
+
+{%block title%}Home{%endblock%}
+
+{%block nav%}
+    <div class="nav-links">
+        <ul>
+      <li><a href="/home">Home</a></li>
+      <li><a href="/admin">Admin</a></li>
+      <li><a href='accounts/signup/student'>Sign-Up Student</a></li>
+      <li><a href='accounts/signup/instructor'>Sign-Up Instructor</a></li>
+      <li><a href="/login">Login</a></li> 
+      <li><a href="/logout">Logout</a></li> 
+    </ul>
+    </div>
+{%endblock%}
+
+{%block content%}
+<h3>Welcome back {{user.first_name}}!</h3>
+{% if user.is_authenticated and user.is_instructor %}
+    <p>You are logged in as an instructor.</p>
+    <p> To begin, create a new course. </p>
+    <h1>Course List</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Course Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Meeting Time</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            
+        {% if course_list %}
+            <tr>
+            {% for course in course_list%}
+                <th scope="row">{{course.name}}</th>
+                <td>{{course.Description}}</td>
+                <td>{{course.Time}}</td>
+                <td>WIP</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <p>There are no books in the library.</p>
+        {% endif %}
+      </table>
+
+{% elif user.is_authenticated and user.is_student %}
+    <p>You are logged in as a student.</p> 
+    <p> To begin, create a new application. </p>
+{%else%}  
+    <p>You are logged in as an admin.</p>
+    <p> To begin, create a new course or application. </p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col"><h3>Course</h3></th>
+          <th scope="col"><h3>Positions</h3></th>
+          <th scope="col"><h3>Schedule</h3></th>
+          <th scope="col"><h3>Action</h3></th>
+        </tr>
+      </thead>
+      <tbody>
+    {% if course_list %}
+            <tr>
+            {% for course in course_list%}
+                <td><h4>{{course.course_code}}</h4>
+                  <p>{{course.desc}}</p>
+                </td>
+                <td>{{course.positions}}</td>
+                <td>
+                  <p>{{course.days}}:</p>
+                  <p>{{course.start_time}} - {{course.end_time}}</p>
+                </td>
+                <td><a href="/apply/{{course.id}}" class="btn btn-success">Apply</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+      </table>
+
+{% endif %}
+    
+{%endblock%}
